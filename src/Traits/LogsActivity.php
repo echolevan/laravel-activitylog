@@ -35,6 +35,7 @@ trait LogsActivity
                     ->useLog($logName)
                     ->performedOn($model)
                     ->withProperties($model->attributeValuesToBeLogged($eventName))
+                    ->setIp(request()->getClientIp())
                     ->log($description);
             });
         });

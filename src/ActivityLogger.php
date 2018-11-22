@@ -8,6 +8,7 @@ use Illuminate\Support\Traits\Macroable;
 use Spatie\Activitylog\Contracts\Activity;
 use Illuminate\Contracts\Config\Repository;
 use Spatie\Activitylog\Exceptions\CouldNotLogActivity;
+use Zhuzhichao\IpLocationZh\Ip;
 
 class ActivityLogger
 {
@@ -17,6 +18,8 @@ class ActivityLogger
     protected $auth;
 
     protected $logName = '';
+
+    protected $ip = '127.0.0.1';
 
     /** @var \Illuminate\Database\Eloquent\Model */
     protected $performedOn;
@@ -153,6 +156,10 @@ class ActivityLogger
 
         $activity->log_name = $this->logName;
 
+        $activity->ip = $this->ip;
+
+        $activity->ip_location = implode(',', Ip::find($this->ip));
+
         $activity->save();
 
         return $activity;
@@ -200,5 +207,10 @@ class ActivityLogger
 
             return array_get($attributeValue, $propertyName, $match);
         }, $description);
+    }
+
+    public function setIp($ip) {
+        $this->ip = $ip;
+        return $this;
     }
 }
